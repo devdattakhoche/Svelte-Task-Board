@@ -1,62 +1,60 @@
 <script>
-  import Todo_list from "./todos.svelte";
-  import { todos } from "./store.js";
-  const add_todo = () => {
-    const todo_text = document.getElementById("title").value;
+  import TaskList from "./taskList.svelte";
+  import { tasks } from "../store.js";
 
-    console.log(todo_text)
-    if (!todo_text) {
+  const addTask = () => {
+    let taskText = document.getElementById("task").value;
+
+    if (!taskText) {
       alert("Oops!! It seems that the Task is Empty");
       return;
     }
 
-    const todo = {
+    const task = {
       id: Date.now().toString(36),
-      title: todo_text,
+      title: taskText,
     };
 
-    $todos = [...$todos, todo];
+    $tasks = [...$tasks, task];
 
-    document.getElementById("title").value = "";    
+    document.getElementById("task").value = "";
   };
 
-  // const stored = localStorage.content
-// or localStorage.getItem('content')
-
-  // Set the stored value or a sane default.
-  // export const content = writable(stored || 'Hello, World!')
-
-  // Anytime the store changes, update the local storage value.
-  // content.subscribe((value) => localStorage.content = JSON.stringify(value))
-
-  const pressEnter = (e) =>{
-    if(e.code == 'Enter')
-      add_todo()
-  }
+  const pressEnter = (e) => {
+    if (e.code == "Enter") addTask();
+  };
 </script>
 
-<div class="input-center">
-  <h1>Hey everyone 👋👋</h1>
-  <h3>This is Draggable Task Board 🎉</h3>
-  <small
-    >Made by <a target="blank" href="https://devsblog.hashnode.dev/"
-      >@devdattakhoche</a
-    ></small
-  >
 
-  <br />
-  <div>
-    <input id="title" type="text" placeholder="Enter note or Task or ...." size="20" on:keydown={pressEnter} />
-    <button on:click={add_todo}>Add Task</button>
+  <div class="input-center">
+    <h1>Hey everyone 👋👋</h1>
+    <h3>This is Draggable Task Board 🎉</h3>
+    <small
+      >Made by <a target="blank" href="https://devsblog.hashnode.dev/"
+        >@devdattakhoche</a
+      ></small
+    >
+    <br />
+    <div>
+      <input
+        id="task"
+        type="text"
+        placeholder="Enter note or Task or ...."
+        size="20"
+        on:keydown={pressEnter}
+      />
+      <button on:click={addTask}>Add Task</button>
+    </div>
+    <br />
+
+    {#if $tasks.length > 0}
+      <button on:click={() => ($tasks = [])}>Delete all </button>
+    {/if}
+
+    <TaskList />
   </div>
-  <br />
 
-  {#if $todos.length > 0}
-    <button on:click={() => ($todos = [])}>Delete all </button>
-  {/if}
-
-</div>
-<Todo_list />
+  
 
 <style>
   :global(body) {
@@ -90,7 +88,6 @@
   }
 
   input {
-    /* border-radius: 10px; */
     border: 0;
     color: white;
     font-size: 1.3em;
